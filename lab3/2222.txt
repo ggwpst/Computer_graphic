@@ -1,0 +1,349 @@
+for (int j = 0; j < obs_f[i].size(); j++) {
+                    //std::cout << object[i][j].getX() << " " << object[i][j].getY() << std::endl;
+                    if (j == 0) {
+                        polygon_first.setXY(obs_v_trans[obs_f[i][j]][0], obs_v_trans[obs_f[i][j]][1]);
+                        polygon_last.setXY(object[i][j].getX(), object[i][j].getY());
+                        rgb.Ran();
+                        continue;
+                    }
+                    //left
+                    if (object[i][j].getX() > -1 && object[i][j - 1].getX() > -1) {
+                        //std::cout << object[i][j].getX() << " " << object[i][j].getY() << " " << std::atof(ch[1].c_str()) << "hi" << std::endl;
+                        polygon_last.setXY(object[i][j].getX(), object[i][j].getY());
+                        object_data_trans_left.push_back(polygon_last);
+                    }
+                    else if (object[i][j].getX() <= -1 && object[i][j - 1].getX() > -1) {
+                        float m = (float)(object[i][j].getY() - object[i][j - 1].getY()) / (float)(object[i][j].getX() - object[i][j - 1].getX());
+                        float b = object[i][j].getY() - (m * object[i][j].getX());
+                        float y = m * -1 + b;
+                        polygon_last.setXY(-1, y);
+                        object_data_trans_left.push_back(polygon_last);
+                    }
+                    else if (object[i][j].getX() <= -1 && object[i][j - 1].getX() <= -1) {
+                        polygon_last.setXY(object[i][j].getX(), object[i][j].getY());
+                    }
+                    else if (object[i][j].getX() > -1 && object[i][j - 1].getX() <= -1) {
+                        float m = (float)(object[i][j].getY() - object[i][j - 1].getY()) / (float)(object[i][j].getX() - object[i][j - 1].getX());
+                        float b = object[i][j].getY() - (m * object[i][j].getX());
+                        float y = m * -1 + b;
+                        polygon_last.setXY(-1, y);
+                        object_data_trans_left.push_back(polygon_last);
+                        polygon_last.setXY(object[i][j].getX(), object[i][j].getY());
+                        object_data_trans_left.push_back(polygon_last);
+                    }
+                }
+                //last_to_first_left
+                if (polygon_first.getX() > -1 && polygon_last.getX() > -1) {
+                    //std::cout << polygon_last.getX() << " " << polygon_last.getY() << " " << std::atof(ch[1].c_str()) << "hi" << std::endl;
+                    polygon_last.setXY(polygon_first.getX(), polygon_first.getY());
+                    object_data_trans_left.push_back(polygon_last);
+                }
+                else if (polygon_first.getX() <= -1 && polygon_last.getX() > -1) {
+                    float m = (float)(polygon_first.getY() - polygon_last.getY()) / (float)(polygon_first.getX() - polygon_last.getX());
+                    float b = polygon_first.getY() - (m * polygon_first.getX());
+                    float y = m * -1 + b;
+                    polygon_last.setXY(-1, y);
+                    object_data_trans_left.push_back(polygon_last);
+                }
+                else if (polygon_first.getX() <= -1 && polygon_last.getX() <= -1) {
+                    polygon_last.setXY(polygon_first.getX(), polygon_first.getY());
+                }
+                else if (polygon_first.getX() > -1 && polygon_last.getX() <= -1) {
+                    float m = (float)(polygon_first.getY() - polygon_last.getY()) / (float)(polygon_first.getX() - polygon_last.getX());
+                    float b = polygon_first.getY() - (m * polygon_first.getX());
+                    float y = m * -1 + b;
+                    polygon_last.setXY(-1, y);
+                    object_data_trans_left.push_back(polygon_last);
+                    polygon_last.setXY(polygon_first.getX(), polygon_first.getY());
+                    object_data_trans_left.push_back(polygon_last);
+                }
+                for (int v = 0; v < object_data_trans_left.size(); v++) {
+                    std::cout << object_data_trans_left[v].getX() << " " << object_data_trans_left[v].getY() << " " << "left" << std::endl;
+                }
+                std::cout << std::endl;
+
+                for (int j = 0; j < object_data_trans_left.size(); j++) {
+                    if (j == 0) {
+                        polygon_first.setXY(object_data_trans_left[j].getX(), object_data_trans_left[j].getY());
+                        polygon_last.setXY(object_data_trans_left[j].getX(), object_data_trans_left[j].getY());
+                        rgb.Ran();
+                        continue;
+                    }
+                    //bottom
+                    if (object_data_trans_left[j].getY() > -1 && object_data_trans_left[j - 1].getY() > -1) {
+                        //std::cout << object_data_trans_left[j].getX() << " " << object_data_trans_left[j].getY() << " " << std::atof(ch[3].c_str()) << "hi" << std::endl;
+                        polygon_last.setXY(object_data_trans_left[j].getX(), object_data_trans_left[j].getY());
+                        object_data_trans_bottom.push_back(polygon_last);
+                    }
+                    else if (object_data_trans_left[j].getY() <= -1 && object_data_trans_left[j - 1].getY() > -1) {
+                        if (object_data_trans_left[j].getX() == object_data_trans_left[j - 1].getX()) {
+                            polygon_last.setXY(object_data_trans_left[j].getX(), -1);
+                            object_data_trans_bottom.push_back(polygon_last);
+                        }
+                        else {
+                            float m = (float)(object_data_trans_left[j].getY() - object_data_trans_left[j - 1].getY()) / (float)(object_data_trans_left[j].getX() - object_data_trans_left[j - 1].getX());
+                            float b = object_data_trans_left[j].getY() - (m * object_data_trans_left[j].getX());
+                            float x = (-1 - b) / m;
+                            polygon_last.setXY(x, -1);
+                            object_data_trans_bottom.push_back(polygon_last);
+                        }
+                    }
+                    else if (object_data_trans_left[j].getY() <= -1 && object_data_trans_left[j - 1].getY() <= -1) {
+                        polygon_last.setXY(object_data_trans_left[j].getX(), object_data_trans_left[j].getY());
+                    }
+                    else if (object_data_trans_left[j].getY() > -1 && object_data_trans_left[j - 1].getY() <= -1) {
+                        if (object_data_trans_left[j].getX() == object_data_trans_left[j - 1].getX()) {
+                            polygon_last.setXY(object_data_trans_left[j].getX(), -1);
+                            object_data_trans_bottom.push_back(polygon_last);
+                            polygon_last.setXY(object_data_trans_left[j].getX(), object_data_trans_left[j].getY());
+                            object_data_trans_bottom.push_back(polygon_last);
+                        }
+                        else {
+                            float m = (float)(object_data_trans_left[j].getY() - object_data_trans_left[j - 1].getY()) / (float)(object_data_trans_left[j].getX() - object_data_trans_left[j - 1].getX());
+                            float b = object_data_trans_left[j].getY() - (m * object_data_trans_left[j].getX());
+                            float x = (-1 - b) / m;
+                            polygon_last.setXY(x, -1);
+                            object_data_trans_bottom.push_back(polygon_last);
+                            polygon_last.setXY(object_data_trans_left[j].getX(), object_data_trans_left[j].getY());
+                            object_data_trans_bottom.push_back(polygon_last);
+                        }
+                    }
+                }
+                object_data_trans_left.clear();
+                //last_to_first_bottom
+                if (polygon_first.getY() > -1 && polygon_last.getY() > -1) {
+
+                    polygon_last.setXY(polygon_first.getX(), polygon_first.getY());
+                    object_data_trans_bottom.push_back(polygon_last);
+                    //std::cout << polygon_last.getX() << " " << polygon_last.getY() << " " << std::atof(ch[1].c_str()) << "hi" << std::endl;
+
+                }
+                else if (polygon_first.getY() <= -1 && polygon_last.getY() > -1) {
+                    if (polygon_first.getX() == polygon_last.getX()) {
+                        polygon_last.setXY(polygon_first.getX(), -1);
+                        object_data_trans_bottom.push_back(polygon_last);
+                    }
+                    else {
+                        float m = (float)(polygon_first.getY() - polygon_last.getY()) / (float)(polygon_first.getX() - polygon_last.getX());
+                        float b = polygon_first.getY() - (m * polygon_first.getX());
+                        float x = (-1 - b) / m;
+                        polygon_last.setXY(x, -1);
+                        object_data_trans_bottom.push_back(polygon_last);
+                        //std::cout << polygon_last.getX() << " " << polygon_last.getY() << " " << std::atof(ch[1].c_str()) << "hi" << std::endl;
+                    }
+                }
+                else if (polygon_first.getY() <= -1 && polygon_last.getY() <= -1) {
+                    polygon_last.setXY(polygon_first.getX(), polygon_first.getY());
+                    //std::cout << polygon_last.getX() << " " << polygon_last.getY() << " " << std::atof(ch[1].c_str()) << "hi" << std::endl;
+                }
+                else if (polygon_first.getY() > -1 && polygon_last.getY() <= -1) {
+                    if (polygon_first.getX() == polygon_last.getX()) {
+                        polygon_last.setXY(polygon_first.getX(), -1);
+                        object_data_trans_bottom.push_back(polygon_last);
+                        polygon_last.setXY(polygon_first.getX(), polygon_first.getY());
+                        object_data_trans_bottom.push_back(polygon_last);
+                    }
+                    else {
+                        float m = (float)(polygon_first.getY() - polygon_last.getY()) / (float)(polygon_first.getX() - polygon_last.getX());
+                        float b = polygon_first.getY() - (m * polygon_first.getX());
+                        float x = (-1 - b) / m;
+                        polygon_last.setXY(x, -1);
+                        object_data_trans_bottom.push_back(polygon_last);
+                        polygon_last.setXY(polygon_first.getX(), polygon_first.getY());
+                        object_data_trans_bottom.push_back(polygon_last);
+                        //std::cout << polygon_last.getX() << " " << polygon_last.getY() << " " << std::atof(ch[1].c_str()) << "hi" << std::endl;
+                    }
+                }
+                for (int v = 0; v < object_data_trans_bottom.size(); v++) {
+                    std::cout << object_data_trans_bottom[v].getX() << " " << object_data_trans_bottom[v].getY() << " " << "bottom" << std::endl;
+                }
+                std::cout << std::endl;
+
+                for (int j = 0; j < object_data_trans_bottom.size(); j++) {
+                    if (j == 0) {
+                        std::cout << "1" << std::endl;
+                        polygon_first.setXY(object_data_trans_bottom[j].getX(), object_data_trans_bottom[j].getY());
+                        polygon_last.setXY(object_data_trans_bottom[j].getX(), object_data_trans_bottom[j].getY());
+                        rgb.Ran();
+                        for (int v = 0; v < object_data_trans_right.size(); v++) {
+                            std::cout << object_data_trans_right[v].getX() << " " << object_data_trans_right[v].getY() << " " << "1" << std::endl;
+                        }
+                        continue;
+                    }
+                    //right
+                    if (object_data_trans_bottom[j].getX() < 1 && object_data_trans_bottom[j - 1].getX() < 1) {
+                        std::cout << "2" << std::endl;
+                        polygon_last.setXY(object_data_trans_bottom[j].getX(), object_data_trans_bottom[j].getY());
+                        object_data_trans_right.push_back(polygon_last);
+
+                    }
+                    else if (object_data_trans_bottom[j].getX() >= 1 && object_data_trans_bottom[j - 1].getX() < 1) {
+                        std::cout << "3" << std::endl;
+                        float m = (float)(object_data_trans_bottom[j].getY() - object_data_trans_bottom[j - 1].getY()) / (float)(object_data_trans_bottom[j].getX() - object_data_trans_bottom[j - 1].getX());
+                        float b = object_data_trans_bottom[j].getY() - (m * object_data_trans_bottom[j].getX());
+                        float y = m * 1 + b;
+                        polygon_last.setXY(1, y);
+                        object_data_trans_right.push_back(polygon_last);
+                        for (int v = 0; v < object_data_trans_right.size(); v++) {
+                            std::cout << object_data_trans_right[v].getX() << " " << object_data_trans_right[v].getY() << " " << "3" << std::endl;
+                        }
+                    }
+                    else if (object_data_trans_bottom[j].getX() >= 1 && object_data_trans_bottom[j - 1].getX() >= 1) {
+                        std::cout << "4" << std::endl;
+                        polygon_last.setXY(object_data_trans_bottom[j].getX(), object_data_trans_bottom[j].getY());
+                        for (int v = 0; v < object_data_trans_right.size(); v++) {
+                            std::cout << object_data_trans_right[v].getX() << " " << object_data_trans_right[v].getY() << " " << "4" << std::endl;
+                        }
+                    }
+                    else if (object_data_trans_bottom[j].getX() < 1 && object_data_trans_bottom[j - 1].getX() >= 1) {
+                        std::cout << "5" << std::endl;
+                        float m = (float)(object_data_trans_bottom[j].getY() - object_data_trans_bottom[j - 1].getY()) / (float)(object_data_trans_bottom[j].getX() - object_data_trans_bottom[j - 1].getX());
+                        float b = object_data_trans_bottom[j].getY() - (m * object_data_trans_bottom[j].getX());
+                        float y = m * 1 + b;
+                        //std::cout << m << " " << b << " " << y << std::endl;
+                        polygon_last.setXY(1, y);
+                        object_data_trans_right.push_back(polygon_last);
+                        polygon_last.setXY(object_data_trans_bottom[j].getX(), object_data_trans_bottom[j].getY());
+                        object_data_trans_right.push_back(polygon_last);
+                        for (int v = 0; v < object_data_trans_right.size(); v++) {
+                            std::cout << object_data_trans_right[v].getX() << " " << object_data_trans_right[v].getY() << " " << "5" << std::endl;
+                        }
+                    }
+                }
+                object_data_trans_bottom.clear();
+                //last_to_first_right
+                //std::cout << object_data_trans_right.size() << std::endl;
+                //std::cout << polygon_first.getX() << " " << std::atof(ch[2].c_str()) << " " << polygon_last.getX() << std::endl;
+                if (polygon_first.getX() < 1 && polygon_last.getX() < 1) {
+                    std::cout << "6" << std::endl;
+                    polygon_last.setXY(polygon_first.getX(), polygon_first.getY());
+                    object_data_trans_right.push_back(polygon_last);
+                    /*for (int v = 0; v < object_data_trans_right.size(); v++) {
+                        std::cout << object_data_trans_right[v].getX() << " " << object_data_trans_right[v].getY() << "hi+++++++++++++++++" << std::endl;
+                    }*/
+                }
+                else if (polygon_first.getX() >= 1 && polygon_last.getX() < 1) {
+                    std::cout << "7" << std::endl;
+                    float m = (float)(polygon_first.getY() - polygon_last.getY()) / (float)(polygon_first.getX() - polygon_last.getX());
+                    float b = polygon_first.getY() - (m * polygon_first.getX());
+                    float y = m * 1 + b;
+                    polygon_last.setXY(1, y);
+                    object_data_trans_right.push_back(polygon_last);
+                }
+                else if (polygon_first.getX() >= 1 && polygon_last.getX() >= 1) {
+                    std::cout << "8" << std::endl;
+                    polygon_last.setXY(polygon_first.getX(), polygon_first.getY());
+                    for (int v = 0; v < object_data_trans_right.size(); v++) {
+                        std::cout << object_data_trans_right[v].getX() << " " << object_data_trans_right[v].getY() << " " << "8" << std::endl;
+                    }
+                }
+                else if (polygon_first.getX() < 1 && polygon_last.getX() >= 1) {
+                    //std::cout << "9" << std::endl;
+                    float m = (float)(polygon_first.getY() - polygon_last.getY()) / (float)(polygon_first.getX() - polygon_last.getX());
+                    float b = polygon_first.getY() - (m * polygon_first.getX());
+                    float y = m * 1 + b;
+                    polygon_last.setXY(1, y);
+                    object_data_trans_right.push_back(polygon_last);
+                    polygon_last.setXY(polygon_first.getX(), polygon_first.getY());
+                    object_data_trans_right.push_back(polygon_last);
+                }
+                //std::cout << object_data_trans_right.size() << std::endl;
+                for (int v = 0; v < object_data_trans_right.size(); v++) {
+                    std::cout << object_data_trans_right[v].getX() << " " << object_data_trans_right[v].getY() << " " << "right" << std::endl;
+                }
+                /*std::cout << std::endl;
+                std::cout << object_data_trans_right.size() << std::endl;*/
+
+                for (int j = 0; j < object_data_trans_right.size(); j++) {
+                    //std::cout << "hi" << std:: endl;
+                    if (j == 0) {
+                        polygon_first.setXY(object_data_trans_right[j].getX(), object_data_trans_right[j].getY());
+                        polygon_last.setXY(object_data_trans_right[j].getX(), object_data_trans_right[j].getY());
+                        rgb.Ran();
+                        std::cout << "hi2" << std::endl;
+                        continue;
+                    }
+                    //top
+                    if (object_data_trans_right[j].getY() <= 1 && object_data_trans_right[j - 1].getY() <= 1) {
+                        polygon_last.setXY(object_data_trans_right[j].getX(), object_data_trans_right[j].getY());
+                        object_data_trans_top.push_back(polygon_last);
+                    }
+                    else if (object_data_trans_right[j].getY() > 1 && object_data_trans_right[j - 1].getY() <= 1) {
+                        if (object_data_trans_right[j].getX() == object_data_trans_right[j - 1].getX()) {
+                            polygon_last.setXY(object_data_trans_right[j].getX(), 1);
+                            object_data_trans_top.push_back(polygon_last);
+                        }
+                        else {
+                            float m = (float)(object_data_trans_right[j].getY() - object_data_trans_right[j - 1].getY()) / (float)(object_data_trans_right[j].getX() - object_data_trans_right[j - 1].getX());
+                            float b = object_data_trans_right[j].getY() - (m * object_data_trans_right[j].getX());
+                            float x = (1 - b) / m;
+                            polygon_last.setXY(x, 1);
+                            object_data_trans_top.push_back(polygon_last);
+                        }
+                    }
+                    else if (object_data_trans_right[j].getY() > 1 && object_data_trans_right[j - 1].getY() > 1) {
+                        std::cout << "456789" << std::endl;
+                        polygon_last.setXY(object_data_trans_right[j].getX(), object_data_trans_right[j].getY());
+                    }
+                    else if (object_data_trans_right[j].getY() <= 1 && object_data_trans_right[j - 1].getY() > 1) {
+                        if (object_data_trans_right[j].getX() == object_data_trans_right[j - 1].getX()) {
+                            polygon_last.setXY(object_data_trans_right[j].getX(), 1);
+                            object_data_trans_top.push_back(polygon_last);
+                            polygon_last.setXY(object_data_trans_right[j].getX(), object_data_trans_right[j].getY());
+                            object_data_trans_top.push_back(polygon_last);
+                        }
+                        else {
+                            float m = (float)(object_data_trans_right[j].getY() - object_data_trans_right[j - 1].getY()) / (float)(object_data_trans_right[j].getX() - object_data_trans_right[j - 1].getX());
+                            float b = object_data_trans_right[j].getY() - (m * object_data_trans_right[j].getX());
+                            float x = (1 - b) / m;
+                            polygon_last.setXY(x, 1);
+                            object_data_trans_top.push_back(polygon_last);
+                            polygon_last.setXY(object_data_trans_right[j].getX(), object_data_trans_right[j].getY());
+                            object_data_trans_top.push_back(polygon_last);
+                        }
+                    }
+                }
+                object_data_trans_right.clear();
+                //last_to_first_top
+                if (polygon_first.getY() <= 1 && polygon_last.getY() <= 1) {
+                    polygon_last.setXY(polygon_first.getX(), polygon_first.getY());
+                    object_data_trans_top.push_back(polygon_last);
+                }
+                else if (polygon_first.getY() > 1 && polygon_last.getY() <= 1) {
+                    if (polygon_first.getX() == polygon_last.getX()) {
+                        polygon_last.setXY(polygon_first.getX(), 1);
+                        object_data_trans_top.push_back(polygon_last);
+                    }
+                    else {
+                        float m = (float)(polygon_first.getY() - polygon_last.getY()) / (float)(polygon_first.getX() - polygon_last.getX());
+                        float b = polygon_first.getY() - (m * polygon_first.getX());
+                        float x = (1 - b) / m;
+                        polygon_last.setXY(x, 1);
+                        object_data_trans_top.push_back(polygon_last);
+                    }
+                }
+                else if (polygon_first.getY() > 1 && polygon_last.getY() > 1) {
+                    polygon_last.setXY(polygon_first.getX(), polygon_first.getY());
+                }
+                else if (polygon_first.getY() <= 1 && polygon_last.getY() > 1) {
+                    if (polygon_first.getX() == polygon_last.getX()) {
+                        polygon_last.setXY(polygon_first.getX(), 1);
+                        object_data_trans_top.push_back(polygon_last);
+                        polygon_last.setXY(polygon_first.getX(), polygon_first.getY());
+                        object_data_trans_top.push_back(polygon_last);
+                    }
+                    else {
+                        float m = (float)(polygon_first.getY() - polygon_last.getY()) / (float)(polygon_first.getX() - polygon_last.getX());
+                        float b = polygon_first.getY() - (m * polygon_first.getX());
+                        float x = (1 - b) / m;
+                        polygon_last.setXY(x, 1);
+                        object_data_trans_top.push_back(polygon_last);
+                        polygon_last.setXY(polygon_first.getX(), polygon_first.getY());
+                        object_data_trans_top.push_back(polygon_last);
+                    }
+                }
+                for (int v = 0; v < object_data_trans_top.size(); v++) {
+                    std::cout << object_data_trans_top[v].getX() << " " << object_data_trans_top[v].getY() << " " << "top" << std::endl;
+                }
+                std::cout << std::endl;
+            
